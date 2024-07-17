@@ -2,8 +2,8 @@ import { Button, cn, FormPanel, RenderField } from "@/shared";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/app";
-import { validRegisterSchema } from "./validate";
 import { registerAction } from "../../service";
+import { validateRegisterScema } from "./validate";
 
 const Form = () => {
   const utility = useAppSelector((state) => state.utility);
@@ -25,7 +25,7 @@ const Form = () => {
       <FormPanel
         formName={"RegisterFom"}
         onSubmit={onSubmit}
-        validate={validRegisterSchema}
+        validate={validateRegisterScema}
         initialValues={formValues}
       >
         {({ form }) => (
