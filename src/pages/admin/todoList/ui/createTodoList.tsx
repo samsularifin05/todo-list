@@ -10,8 +10,8 @@ import {
 } from "../service";
 
 interface Props {
-  idSelected?: number;
-  idSelectedPerent?: number;
+  idSelected?: number | null;
+  idSelectedPerent?: number | null;
 }
 const CreateTodoList = (props: Props) => {
   const { idSelected, idSelectedPerent } = props;
@@ -29,10 +29,14 @@ const CreateTodoList = (props: Props) => {
   }
 
   const hapusItem = () => {
-    dispatch(hapusItemService(idSelected, idSelectedPerent));
+    if (idSelected && idSelectedPerent) {
+      dispatch(hapusItemService(idSelected, idSelectedPerent));
+    }
   };
   const editItem = () => {
-    dispatch(renameItems(idSelected, idSelectedPerent));
+    if (idSelected && idSelectedPerent) {
+      dispatch(renameItems(idSelected, idSelectedPerent));
+    }
   };
 
   return (
@@ -57,6 +61,7 @@ const CreateTodoList = (props: Props) => {
               <Button
                 type="submit"
                 className="mt-1"
+                disabled={idSelectedPerent && idSelected ? true : false}
                 loading={utility.getLoading.button}
               >
                 Simpan
@@ -65,7 +70,7 @@ const CreateTodoList = (props: Props) => {
                 <div className="flex flex-row gap-2">
                   <Button
                     type="button"
-                    className="mt-1"
+                    className="mt-1 bg-red-600"
                     onClick={() => hapusItem()}
                     loading={utility.getLoading.button}
                   >

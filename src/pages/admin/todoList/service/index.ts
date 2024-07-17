@@ -32,6 +32,7 @@ export const saveTodoList = (): AppThunk => {
       dispatch(getDataTodolist());
       ToastNotificationSuccess("Berhasil Di tambahkan");
       dispatch(formActions.resetForm("FormTodoList"));
+      dispatch(utilityActions.simpanDataTmp(null));
     } catch (error) {
       dispatch(getDataTodolist());
     } finally {
@@ -52,6 +53,7 @@ export const saveTodoListItems = (id: number): AppThunk => {
       dispatch(getDataTodolist());
       reset(id);
       ToastNotificationSuccess("Berhasil Di tambahkan");
+      dispatch(utilityActions.simpanDataTmp(null));
     } catch (error) {
       dispatch(getDataTodolist());
     } finally {
@@ -69,6 +71,7 @@ export const hapusItemService = (id?: number, idItems?: number): AppThunk => {
       reset(id, idItems);
 
       ToastNotificationSuccess("Berhasil Di dihapus");
+      dispatch(utilityActions.simpanDataTmp(null));
     } catch (error) {
       dispatch(getDataTodolist());
     } finally {
@@ -94,6 +97,7 @@ export const renameItems = (id?: number, idItems?: number): AppThunk => {
       dispatch(formActions.resetForm("FormTodoList"));
       dispatch(getDataTodolist());
       ToastNotificationSuccess("Berhasil Di rename");
+      dispatch(utilityActions.simpanDataTmp(null));
     } catch (error) {
       dispatch(getDataTodolist());
     } finally {
@@ -102,16 +106,21 @@ export const renameItems = (id?: number, idItems?: number): AppThunk => {
   };
 };
 
-const reset = (id?: number, idItems?: number): void => {
-  const checkbox = document.getElementById(
-    `ceklis${idItems}`
-  ) as HTMLInputElement;
-  checkbox.checked = false;
-  const checkboxItems = document.getElementById(
-    `itemCeklis${id}`
-  ) as HTMLInputElement;
+export const reset = (id?: number | null, idItems?: number | null): void => {
+  if (idItems) {
+    const checkbox = document.getElementById(
+      `ceklis${idItems}`
+    ) as HTMLInputElement;
+    checkbox.checked = false;
+  }
+
+  if (id) {
+    const checkboxItems = document.getElementById(
+      `itemCeklis${id}`
+    ) as HTMLInputElement;
+    checkboxItems.checked = false;
+  }
+
   const nameId = document.getElementById("nameId") as HTMLInputElement;
   nameId.value = "";
-
-  checkboxItems.checked = false;
 };

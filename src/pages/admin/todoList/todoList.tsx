@@ -1,16 +1,21 @@
 import { PanelAdmin, useDispatch } from "@/shared";
 import CreateTodoList from "./ui/createTodoList";
-import { useEffect, useState } from "react";
-import { AppDispatch, useAppSelector } from "@/app";
+import { useEffect } from "react";
+import { AppDispatch, useAppSelector, utilityActions } from "@/app";
 import { getDataTodolist } from "./service";
 import TodoItem from "./item";
 
+interface ItemIdType {
+  idSelected?: number;
+  idSelectedPerent?: number;
+}
 const TodoList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const todoList = useAppSelector((state) => state.todoList.getTodoLost);
+  const dataTmp = useAppSelector(
+    (state) => state.utility.getDataTmp
+  ) as ItemIdType;
 
-  const [idSelected, setidSelected] = useState<number>();
-  const [idSelectedPerent, setidSelectedPerent] = useState<number>();
   const loadingScreen = useAppSelector(
     (state) => state.utility.getLoading.screen
   );
@@ -23,8 +28,8 @@ const TodoList = () => {
     <PanelAdmin>
       <div className="flex items-center mb-10">
         <CreateTodoList
-          idSelectedPerent={idSelectedPerent}
-          idSelected={idSelected}
+          idSelectedPerent={dataTmp?.idSelectedPerent}
+          idSelected={dataTmp?.idSelected}
         />
       </div>
       {todoList.data.map((checklist) => (
@@ -34,7 +39,18 @@ const TodoList = () => {
             <input
               type="checkbox"
               id={`itemCeklis${checklist.id}`}
-              onChange={() => setidSelected(checklist.id)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (e.target.checked) {
+                  dispatch(
+                    utilityActions.simpanDataTmp({
+                      ...dataTmp,
+                      idSelected: checklist.id
+                    })
+                  );
+                } else {
+                  dispatch(utilityActions.simpanDataTmp(null));
+                }
+              }}
             />
           </li>
           {checklist?.items !== null && (
@@ -44,8 +60,21 @@ const TodoList = () => {
                   key={item.id}
                   id={item.id}
                   name={item?.name || ""}
-                  toogle={(id) => setidSelectedPerent(id)}
-                  idSelectedPerent={idSelectedPerent}
+                  toogle={(id, isChecked) => {
+                    if (isChecked) {
+                      // setidSelectedPerent(id);
+                      dispatch(
+                        utilityActions.simpanDataTmp({
+                          ...dataTmp,
+                          idSelectedPerent: id
+                        })
+                      );
+                    } else {
+                      // setidSelectedPerent(null);
+                      dispatch(utilityActions.simpanDataTmp(null));
+                    }
+                  }}
+                  idSelectedPerent={dataTmp?.idSelectedPerent}
                   itemCompletionStatus={item.itemCompletionStatus}
                 />
               ))}
