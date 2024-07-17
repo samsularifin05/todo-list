@@ -6,3 +6,5 @@ Tutorial
 Npm i
 
 npm run dev
+
+<img src="./Screenshot 2024-07-17 at 17.20.01.png" />
