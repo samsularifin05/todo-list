@@ -3,7 +3,13 @@ import { Link, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/app";
 import { registerAction } from "../../service";
-import { validateRegisterScema } from "./validate";
+import * as yup from "yup";
+
+const validateRegisterScema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  email: yup.string().required("email is required"),
+  password: yup.string().required("Password is required")
+});
 
 const Form = () => {
   const utility = useAppSelector((state) => state.utility);
